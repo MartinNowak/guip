@@ -79,7 +79,7 @@ struct Rect(T)
   }
   static if (isFloatingPoint!T) {
     @property void center(Point!T ct) {
-      this.position = ct + Point!T(-0.5 * this.width, -0.5 * this.height);
+      this.pos = ct + Point!T(-0.5 * this.width, -0.5 * this.height);
     }
     @property T centerX() const {
       return 0.5 * (this.left + this.right);
@@ -89,7 +89,7 @@ struct Rect(T)
     }
   } else {
     @property void center(Point!T ct) {
-      this.position = ct + Point!T(this.width >> 1, this.height >> 1);
+      this.pos = ct + Point!T(this.width >> 1, this.height >> 1);
     }
     @property T centerX() const {
       return (this.left + this.right) >> 1;
@@ -121,10 +121,10 @@ struct Rect(T)
     return this;
   }
 
-  @property Point!T position() const {
+  @property Point!T pos() const {
     return Point!T(this.x, this.y);
   }
-  @property ref Rect position(Point!T pos) {
+  @property ref Rect pos(Point!T pos) {
     return this.setPos(pos.x, pos.y);
   }
 
@@ -152,7 +152,7 @@ struct Rect(T)
   }
 
   @property Point!T[2] corners() const {
-    return [this.position, this.position + this.size];
+    return [this.pos, this.pos + this.size];
   }
   /** Set the rectangle to (0,0,0,0)
    */
