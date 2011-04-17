@@ -29,13 +29,6 @@ auto visitEvent(Visitor, Args...)(Event e, Visitor visitor, Args args) {
 }
 
 /**
-   window state change event
- */
-struct StateEvent {
-  bool visible;
-}
-
-/**
    mouse button event
  */
 struct ButtonEvent {
@@ -64,9 +57,23 @@ struct MouseEvent {
    key press event
  */
 struct KeyEvent {
+  @property bool isPress() const {
+    return this.isdown;
+  }
+  @property bool isRelease() const {
+    return !this.isdown;
+  }
   IPoint pos;
+  bool isdown;
   Key key;
   Mod mod;
+}
+
+/**
+   window state change event
+ */
+struct StateEvent {
+  bool visible;
 }
 
 /**
