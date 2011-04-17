@@ -94,6 +94,10 @@ struct ResizeEvent {
    a bitfield representing pressed buttons
  */
 struct Button {
+  @property bool any() const {
+    return this.left || this.middle || this.right;
+  }
+
   mixin(bitfields!(
           bool, "left", 1,
           bool, "middle", 1,
