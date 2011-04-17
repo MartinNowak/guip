@@ -73,7 +73,7 @@ struct KeyEvent {
    window state change event
  */
 struct StateEvent {
-  bool visible;
+  bool visible, focus;
 }
 
 /**
