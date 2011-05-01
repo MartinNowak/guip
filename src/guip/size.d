@@ -8,7 +8,7 @@ struct Size(T)
   T width, height;
 
   @property bool empty() const {
-    return this.width > 0 && this.height > 0;
+    return this.width <= 0 || this.height <= 0;
   }
 
   /**
