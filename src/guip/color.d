@@ -55,6 +55,10 @@ struct Color
     this.b = b;
   }
 
+  @property bool opaque() const {
+    return this.a == 255;
+  }
+
   const Color opBinary(string op)(Color rhs) const
     if (op == "+") {
       return Color(this.argb + rhs.argb);
