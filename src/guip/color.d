@@ -59,6 +59,10 @@ struct Color
     return this.a == 255;
   }
 
+  @property Color complement() const {
+    return Color(a, cast(ubyte)(255 - r), cast(ubyte)(255 - g), cast(ubyte)(255 - b));
+  }
+
   const Color opBinary(string op)(Color rhs) const
     if (op == "+") {
       return Color(this.argb + rhs.argb);
