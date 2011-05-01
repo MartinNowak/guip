@@ -70,11 +70,27 @@ struct KeyEvent {
 }
 
 /**
-   window state change event
+   visibility change event
  */
-struct StateEvent {
-  bool visible, focus;
+struct VisibilityEvent {
+  bool visible;
 }
+
+/**
+   focus change event
+*/
+struct FocusEvent {
+  bool focus;
+}
+
+/**
+   attribute change event
+ */
+struct AttributeEvent {
+  string key, value;
+}
+
+alias Algebraic!(VisibilityEvent, FocusEvent, AttributeEvent) StateEvent;
 
 /**
    window damage event
