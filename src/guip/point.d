@@ -3,6 +3,7 @@ module guip.point;
 private {
   import std.math;
   import std.conv : to;
+  import std.math : nearbyint;
   import std.traits : isSigned, isAssignable, isFloatingPoint;
 
   import guip.size;
@@ -167,6 +168,14 @@ struct Point (T)
    */
   void negate() {
     this = -this;
+  }
+
+  /** Round to integer point
+   */
+  IPoint round()() const
+    if (isFloatingPoint!T)
+  {
+    return IPoint(to!int(nearbyint(this.x)), to!int(nearbyint(this.y)));
   }
 
   Point!T opUnary(string op)() if (op == "-") {
