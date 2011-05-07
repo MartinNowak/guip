@@ -7,6 +7,10 @@ private {
   import guip.color;
   import guip.rect;
   import guip.size;
+
+  import freeimage.freeimage;
+  import core.atomic;
+  import std.exception, std.string;
 }
 
 
@@ -134,6 +138,27 @@ struct Bitmap {
     // this.notifyPixelChanged();
   }
 
+  void save(string path) {
+    auto bpp = 8 * BytesPerPixel(this.config);
+    if (bpp != 0) {
+      synchronized(freeImage) {
+        FIBITMAP* fibmp;
+        // TODO: check if color masks needed
+        if (this.config == Bitmap.Config.ARGB_8888)
+          fibmp = FreeImage_Allocate(width, height, bpp,
+                                          ColorMask!("r"), ColorMask!("g"), ColorMask!("b"));
+        else
+          fibmp = FreeImage_Allocate(width, height, bpp);
+        enforce(fibmp);
+        ubyte* deviceBits = FreeImage_GetBits(fibmp);
+        deviceBits[0 .. this._buffer.length] = this._buffer[];
+        // TODO: avoid flipping
+        FreeImage_FlipVertical(fibmp);
+        FreeImage_Save(FREE_IMAGE_FORMAT.BMP, fibmp, toStringz(path));
+      }
+    }
+  }
+
 private:
 
   enum Flags
@@ -161,3 +186,19 @@ uint BytesPerPixel(Bitmap.Config c) {
   }
 }
 
+// dummy class serves as lock
+class FreeImage {};
+shared FreeImage _freeImage;
+@property shared(FreeImage) freeImage() {
+  // TODO: cas doesn't compile => init unsafe
+//  if (_freeImage is null) {
+//    auto fi = new shared(FreeImage)();
+//    //    cas(&_freeImage, cast(FreeImage)null, fi);
+//    _freeImage = fi;
+//  }
+  return _freeImage;
+}
+
+shared static this() {
+  _freeImage = new shared(FreeImage)();
+}
