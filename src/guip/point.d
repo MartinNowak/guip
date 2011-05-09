@@ -188,7 +188,6 @@ struct Point (T)
    * between a's and b's (a -/+ b).
    */
   const Point!T opBinary(string op)(in Point!T rhs) const
-  //    if (op == "-" || op == "+" || op == "*" || op == "/")
   {
     T resx = mixin("this.x" ~ op ~ "rhs.x");
     T resy = mixin("this.y" ~ op ~ "rhs.y");
@@ -199,11 +198,16 @@ struct Point (T)
    *  the scalar.
    */
   const Point!T opBinary(string op)(in T val) const
-    if (op == "*" || op == "/")
   {
     T resx = mixin("this.x" ~ op ~ "val");
     T resy = mixin("this.y" ~ op ~ "val");
     return Point!T(resx, resy);
+  }
+
+  const Point!T opBinaryRight(string op)(in T val) const
+    if(op != "/")
+  {
+    return this.opBinary!(op)(val);
   }
 
   const Point!T opBinary(string op)(in Size!T size) const
