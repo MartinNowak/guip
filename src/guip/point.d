@@ -266,7 +266,7 @@ T dotProduct(T)(Point!T a, Point!T b) {
 
 /** Returns the cross product of a and b, treating them as 2D vectors
  */
-T crossProduct(T)(Point!T a, Point!T b) {
+T determinant(T)(ref const Point!T a, ref const Point!T b) {
   return a.x * b.y - a.y * b.x;
 }
 
@@ -374,11 +374,11 @@ void testVectorOps(T)()
   auto p2 = -p1;
   assert(dotProduct(p1, p2) == -5);
 
-  assert(crossProduct(p1, p2) == 0);
+  assert(determinant(p1, p2) == 0);
   auto pCW = p1;
   pCW.rotateCW();
   auto pCCW = p1;
   pCCW.rotateCCW();
-  assert(crossProduct(p1, pCW) == -(crossProduct(p1, pCCW)));
+  assert(determinant(p1, pCW) == -(determinant(p1, pCCW)));
   assert(dotProduct(p1, pCW) == 0);
 }
