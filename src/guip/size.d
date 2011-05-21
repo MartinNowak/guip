@@ -1,11 +1,19 @@
 module guip.size;
 
+import std.conv;
+
 alias Size!(int) ISize;
 alias Size!(float) FSize;
 
 struct Size(T)
 {
   T width, height;
+
+  @property string toString() const {
+    return "Size!"~to!string(typeid(T))
+      ~" width: "~to!string(this.width)
+      ~" height: "~to!string(this.height);
+  }
 
   @property bool empty() const {
     return this.width <= 0 || this.height <= 0;
