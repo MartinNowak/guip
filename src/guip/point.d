@@ -85,7 +85,7 @@ struct Point (T)
    *  x,y params. If the vector (x,y) has a degenerate length (i.e. nearly 0)
    *  then return false and do nothing, otherwise return true.
    */
-  void setNormalize(Point!T pt) {
+  void setNormalize(Point pt) {
     return setNormalize(pt.x, pt.y);
   }
   void setNormalize(T x, T y) {
@@ -116,7 +116,7 @@ struct Point (T)
   /** Scale the point's coordinates by scale, writing the answer into dst.
    *  It is legal for dst == this.
    */
-  void scale(T2)(T2 scale, ref Point!T dst) const
+  void scale(T2)(T2 scale, ref Point dst) const
   {
     dst = this;
     dst.scale(scale);
@@ -178,7 +178,7 @@ struct Point (T)
     return IPoint(to!int(nearbyint(this.x)), to!int(nearbyint(this.y)));
   }
 
-  Point!T opUnary(string op)() if (op == "-") {
+  Point opUnary(string op)() if (op == "-") {
     return Point(-x, -y);
   }
 
@@ -187,7 +187,7 @@ struct Point (T)
   /** Returns a new point whose coordinates are the difference/sum
    * between a's and b's (a -/+ b).
    */
-  const Point!T opBinary(string op)(in Point!T rhs) const
+  const Point opBinary(string op)(in Point rhs) const
   {
     T resx = mixin("this.x" ~ op ~ "rhs.x");
     T resy = mixin("this.y" ~ op ~ "rhs.y");
@@ -197,28 +197,28 @@ struct Point (T)
   /** Returns a new point whose coordinates is multiplied/divided by
    *  the scalar.
    */
-  const Point!T opBinary(string op)(in T val) const
+  const Point opBinary(string op)(in T val) const
   {
     T resx = mixin("this.x" ~ op ~ "val");
     T resy = mixin("this.y" ~ op ~ "val");
-    return Point!T(resx, resy);
+    return Point(resx, resy);
   }
 
-  const Point!T opBinaryRight(string op)(in T val) const
+  const Point opBinaryRight(string op)(in T val) const
     if(op != "/")
   {
     return this.opBinary!(op)(val);
   }
 
-  const Point!T opBinary(string op)(in Size!T size) const
+  const Point opBinary(string op)(in Size!T size) const
     if (op == "-" || op == "+")
   {
     T resx = mixin("this.x" ~ op ~ "size.width");
     T resy = mixin("this.y" ~ op ~ "size.height");
-    return Point!T(resx, resy);
+    return Point(resx, resy);
   }
 
-  ref Point!T opAssign(T2)(in Point!T2 rhs) {
+  ref Point opAssign(T2)(in Point!T2 rhs) {
     this.x = rhs.x;
     this.y = rhs.y;
     return this;

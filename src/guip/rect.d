@@ -22,12 +22,12 @@ struct Rect(T)
   alias left x;
   alias top  y;
 
-  static Rect!T emptyRect() {
-    return Rect!T(0, 0);
+  static Rect emptyRect() {
+    return Rect(0, 0);
   }
 
-  static Rect!T invalidRect() {
-    return Rect!T(T.max, T.max, T.min, T.min);
+  static Rect invalidRect() {
+    return Rect(T.max, T.max, T.min, T.min);
   }
 
   this(T w, T h) {
@@ -337,7 +337,7 @@ struct Rect(T)
   }
 
 
-  static Rect!T calcBounds(in Point!T[] pts)
+  static Rect calcBounds(in Point!T[] pts)
   in {
     assert(pts.length > 0);
   }
@@ -352,7 +352,7 @@ struct Rect(T)
       top = min(top, pt.y);
       bottom = max(bottom, pt.y);
     }
-    return Rect!T(left, top, right, bottom);
+    return Rect(left, top, right, bottom);
   }
 
   /** Set the dst integer rectangle by rounding this rectangle's
