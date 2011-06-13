@@ -20,7 +20,7 @@ struct Rect(T)
 {
   T left, top, right, bottom;
   alias left x;
-  alias top  y;
+  alias top y;
 
   static Rect emptyRect() {
     return Rect(0, 0);

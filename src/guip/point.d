@@ -32,8 +32,7 @@ FPoint fPoint(T)(Point!T pt) {
 
 struct Point (T)
 {
-  @property T x;
-  @property T y;
+  T x, y;
 
   this (T x, T y) {
     static if (isFloatingPoint!T) {
