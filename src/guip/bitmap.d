@@ -154,7 +154,7 @@ struct Bitmap {
         deviceBits[0 .. this._buffer.length] = this._buffer[];
         // TODO: avoid flipping
         FreeImage_FlipVertical(fibmp);
-        FreeImage_Save(FREE_IMAGE_FORMAT.BMP, fibmp, toStringz(path));
+        FreeImage_Save(FREE_IMAGE_FORMAT.PNG, fibmp, toStringz(path));
       }
     }
   }
