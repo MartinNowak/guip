@@ -1,11 +1,6 @@
 module guip.color;
 
-private {
-  import std.conv : to;
-  import std.algorithm;
-  import std.string : toupper;
-  import std.ctype : isxdigit;
-}
+import std.algorithm, std.array, std.exception, std.string, std.ctype, std.conv : to;
 
 //version=VERBOSE;
 
@@ -29,23 +24,12 @@ struct Color
     this.argb = argb;
   }
 
-  this(string argbHex) {
-    argbHex = argbHex.toupper();
-    if (argbHex.startsWith("0X")) {
-      argbHex = argbHex[2 .. $];
-    }
-    assert(argbHex.length == 8);
-    this.argb = cast(uint)reduce!("(a << 4) + b")(
-      0, map!fromHexDigit(argbHex));
-  }
-
   unittest {
-    auto argbHex = "80000000";
-    assert(Color("00000001").argb == 1);
-    assert(Color("80000000").argb == (1u << 31));
+    assert(color("00000001").argb == 1);
+    assert(color("80000000").argb == (1u << 31));
     const uint exp = 10u * (1<<28) + 10u * (1<<24) + 11u * (1<<20) + 11u * (1<<16)
       + 12u * (1<<12) + 12u * (1<<8) + 13u * (1<<4) + 13u;
-    assert(Color("AABBCCDD").argb == exp);
+    assert(color("AABBCCDD").argb == exp);
   }
 
   this(ubyte a, ubyte r, ubyte g, ubyte b) {
@@ -94,9 +78,14 @@ private:
 }
 
 
+Color color(uint argb) {
+  return Color(argb);
+}
+
 enum : Color
 {
-  Black     = Color(0xff000000),
+  //! @@ BUG @@ does not evaluate at compile time
+  Black     = color(0xff000000),
   DarkGray  = Color(0xff444444),
   Gray      = Color(0xff888888),
   LightGray = Color(0xffcccccc),
@@ -128,7 +117,68 @@ unittest
   assert(Magenta.g == 0);
 }
 
-private:
+Color color(string colorCode) {
+  colorCode = strip(colorCode).toupper();
+  if (colorCode.startsWith("0X"))
+    colorCode = colorCode[2 .. $];
+  else if (colorCode.startsWith("#"))
+    colorCode = colorCode[1 .. $];
+
+  enforce(colorCode.length);
+
+  if (std.ctype.isxdigit(colorCode[0])) {
+    uint argb;
+    switch (colorCode.length) {
+    case 8:
+      argb = cast(uint)reduce!("(a << 4) | b")(0, map!fromHexDigit(colorCode));
+      break;
+    case 6:
+      argb = cast(uint)(
+          (0xFF << 24) | reduce!("(a << 4) | b")(0, map!fromHexDigit(colorCode)));
+      break;
+    case 4:
+      argb = cast(uint)(
+          reduce!("(a << 8) | (b << 4 | b)")(0, map!fromHexDigit(colorCode)));
+      break;
+    case 3:
+      argb = cast(uint)(
+          (0xFF << 24) | reduce!("(a << 8) | (b << 4 | b)")(0, map!fromHexDigit(colorCode)));
+      break;
+
+    default:
+      enforce(0);
+    }
+    return Color(argb);
+  } else if (colorCode.startsWith("RGB(")) {
+    enforce(colorCode.endsWith(")"));
+    auto triple = colorCode[4 .. $-1].split(",");
+    enforce(triple.length == 3);
+
+    ubyte r, g, b;
+    if (strip(triple[0]).endsWith("%")) {
+      r = to!ubyte(to!uint(strip(triple[0])[0 .. $-1]) * 255 / 100);
+      g = to!ubyte(to!uint(strip(triple[1])[0 .. $-1]) * 255 / 100);
+      b = to!ubyte(to!uint(strip(triple[2])[0 .. $-1]) * 255 / 100);
+    } else {
+      r = to!ubyte(strip(triple[0]));
+      g = to!ubyte(strip(triple[1]));
+      b = to!ubyte(strip(triple[2]));
+      return Color(0xFF, r, g, b);
+    }
+    return Color(0xFF, r, g, b);
+  } else {
+    assert(isalpha(colorCode[0]));
+//    need to make the named color enum scoped
+//    auto capCol = capitalize(colorCode);
+//    foreach(c; __traits(allMembers, Color))
+//      if (colorCode == c) {
+//        return mixin("Color." ~ c);
+//      }
+  }
+  assert(0, colorCode);
+}
+
+package:
 
 template ColorMask(string s) {
   static assert(s.length <=4 && s.length > 0);
