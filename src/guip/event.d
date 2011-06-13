@@ -118,7 +118,9 @@ struct Button {
           bool, "left", 1,
           bool, "middle", 1,
           bool, "right", 1,
-          uint, "", 5));
+          bool, "wheelup", 1,
+          bool, "wheeldown", 1,
+          uint, "", 3));
 }
 
 /**
