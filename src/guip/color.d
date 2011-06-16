@@ -20,9 +20,6 @@ struct Color
       return ret.idup;
     }
   }
-  this(uint argb) {
-    this.argb = argb;
-  }
 
   unittest {
     assert(color("00000001").argb == 1);
@@ -32,24 +29,17 @@ struct Color
     assert(color("AABBCCDD").argb == exp);
   }
 
-  this(ubyte a, ubyte r, ubyte g, ubyte b) {
-    this.a = a;
-    this.r = r;
-    this.g = g;
-    this.b = b;
-  }
-
   @property bool opaque() const {
     return this.a == 255;
   }
 
   @property Color complement() const {
-    return Color(a, cast(ubyte)(255 - r), cast(ubyte)(255 - g), cast(ubyte)(255 - b));
+    return color(a, cast(ubyte)(255 - r), cast(ubyte)(255 - g), cast(ubyte)(255 - b));
   }
 
   const Color opBinary(string op)(Color rhs) const
     if (op == "+") {
-      return Color(this.argb + rhs.argb);
+      return color(this.argb + rhs.argb);
   }
 
   mixin SetGet!("a");
@@ -77,28 +67,23 @@ private:
   }
 }
 
-
-Color color(uint argb) {
-  return Color(argb);
-}
-
 enum : Color
 {
   //! @@ BUG @@ does not evaluate at compile time
   Black     = color(0xff000000),
-  DarkGray  = Color(0xff444444),
-  Gray      = Color(0xff888888),
-  LightGray = Color(0xffcccccc),
-  WarmGray  = Color(0xffaab2b7),
-  ColdGray  = Color(0xff67748c),
-  White     = Color(0xffffffff),
-  Red       = Color(0xffff0000),
-  Green     = Color(0xff00ff00),
-  Blue      = Color(0xff0000ff),
-  Yellow    = Color(0xffffff00),
-  Cyan      = Color(0xff00ffff),
-  Magenta   = Color(0xffff00ff),
-  Orange    = Color(0xffffa500),
+  DarkGray  = color(0xff444444),
+  Gray      = color(0xff888888),
+  LightGray = color(0xffcccccc),
+  WarmGray  = color(0xffaab2b7),
+  ColdGray  = color(0xff67748c),
+  White     = color(0xffffffff),
+  Red       = color(0xffff0000),
+  Green     = color(0xff00ff00),
+  Blue      = color(0xff0000ff),
+  Yellow    = color(0xffffff00),
+  Cyan      = color(0xff00ffff),
+  Magenta   = color(0xffff00ff),
+  Orange    = color(0xffffa500),
 }
 
 unittest
@@ -115,6 +100,21 @@ unittest
   assert(Green.g == 255);
   assert(Blue.b == 255);
   assert(Magenta.g == 0);
+}
+
+Color color(uint argb) {
+  Color res;
+  res.argb = argb;
+  return res;
+}
+
+Color color(ubyte a, ubyte r, ubyte g, ubyte b) {
+  Color res;
+  res.a = a;
+  res.r = r;
+  res.g = g;
+  res.b = b;
+  return res;
 }
 
 Color color(string colorCode) {
@@ -163,9 +163,9 @@ Color color(string colorCode) {
       r = to!ubyte(strip(triple[0]));
       g = to!ubyte(strip(triple[1]));
       b = to!ubyte(strip(triple[2]));
-      return Color(0xFF, r, g, b);
+      return color(0xFF, r, g, b);
     }
-    return Color(0xFF, r, g, b);
+    return color(0xFF, r, g, b);
   } else {
     assert(isalpha(colorCode[0]));
 //    need to make the named color enum scoped
