@@ -49,8 +49,6 @@ struct Bitmap {
     RLE_Index8,
   };
 
-  @property uint width;
-  @property uint height;
   @property ISize size() const {
     return ISize(this.width, this.height);
   }
@@ -58,6 +56,8 @@ struct Bitmap {
     return IRect(this.size);
   }
 
+  uint width;
+  uint height;
   Bitmap.Config config;
   ubyte flags;
   ColorTable colorTable;
@@ -149,14 +149,47 @@ struct Bitmap {
                                           ColorMask!("r"), ColorMask!("g"), ColorMask!("b"));
         else
           fibmp = FreeImage_Allocate(width, height, bpp);
-        enforce(fibmp);
+        enforce(fibmp, "error while allocating write image");
         ubyte* deviceBits = FreeImage_GetBits(fibmp);
         deviceBits[0 .. this._buffer.length] = this._buffer[];
-        // TODO: avoid flipping
+        // TODO: possible to avoid flipping
         FreeImage_FlipVertical(fibmp);
         FreeImage_Save(FREE_IMAGE_FORMAT.PNG, fibmp, toStringz(path));
+
+        FreeImage_Unload(fibmp);
       }
     }
+  }
+
+  static Bitmap load(string path) {
+    Bitmap result;
+    synchronized(freeImage) {
+      auto cpath = std.string.toStringz(path);
+      FREE_IMAGE_FORMAT fmt = FreeImage_GetFileType(cpath);
+      if (fmt == FREE_IMAGE_FORMAT.UNKNOWN)
+        fmt = FreeImage_GetFIFFromFilename(cpath);
+      enforce(fmt != FREE_IMAGE_FORMAT.UNKNOWN && FreeImage_FIFSupportsReading(fmt),
+              "unsupported file " ~ path);
+      FIBITMAP* fibmp = enforce(FreeImage_Load(fmt, cpath), "error while decoding " ~ path);
+      // TODO: possible to avoid flipping
+      FreeImage_FlipVertical(fibmp);
+
+      auto w = FreeImage_GetWidth(fibmp);
+      auto h = FreeImage_GetHeight(fibmp);
+      auto bpp = FreeImage_GetBPP(fibmp);
+
+      auto size =  (w * h * bpp) >> 3;
+      ubyte* bits = FreeImage_GetBits(fibmp);
+      result._buffer = bits[0 .. size].dup;
+      result.width = w;
+      result.height = h;
+
+      // TODO read config from image file
+      result.config = Bitmap.Config.ARGB_8888;
+
+      FreeImage_Unload(fibmp);
+    }
+    return result;
   }
 
 private:
