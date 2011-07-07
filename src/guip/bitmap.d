@@ -174,18 +174,36 @@ struct Bitmap {
       // TODO: possible to avoid flipping
       FreeImage_FlipVertical(fibmp);
 
+      auto bpp = FreeImage_GetBPP(fibmp);
+      switch (bpp) {
+      case 8:
+        // TODO: check for palettized color images
+        result.config = Bitmap.Config.A8;
+        break;
+
+      case 24:
+        auto cpy = FreeImage_ConvertTo32Bits(fibmp);
+        FreeImage_Unload(fibmp);
+        fibmp = cpy;
+        bpp = 32;
+        goto case;
+
+      case 32:
+        result.config = Bitmap.Config.ARGB_8888;
+        break;
+
+      default:
+        assert(0, "unsupported bit depth");
+      }
+
       auto w = FreeImage_GetWidth(fibmp);
       auto h = FreeImage_GetHeight(fibmp);
-      auto bpp = FreeImage_GetBPP(fibmp);
-
-      auto size =  (w * h * bpp) >> 3;
+      auto nbytes =  (w * h * bpp) >> 3;
       ubyte* bits = FreeImage_GetBits(fibmp);
-      result._buffer = bits[0 .. size].dup;
+      result._buffer = bits[0 .. nbytes].dup;
+
       result.width = w;
       result.height = h;
-
-      // TODO read config from image file
-      result.config = Bitmap.Config.ARGB_8888;
 
       FreeImage_Unload(fibmp);
     }
