@@ -138,7 +138,7 @@ struct Bitmap {
     // this.notifyPixelChanged();
   }
 
-  void save(string path) {
+  void save(string path) const {
     auto bpp = 8 * BytesPerPixel(this.config);
     if (bpp != 0) {
       synchronized(freeImage) {
@@ -181,6 +181,8 @@ struct Bitmap {
         result.config = Bitmap.Config.A8;
         break;
 
+      case 48: // for now
+      case 64: // for now
       case 24:
         auto cpy = FreeImage_ConvertTo32Bits(fibmp);
         FreeImage_Unload(fibmp);
@@ -193,7 +195,7 @@ struct Bitmap {
         break;
 
       default:
-        assert(0, "unsupported bit depth");
+        assert(0, "unsupported bit depth " ~ std.conv.to!string(bpp));
       }
 
       auto w = FreeImage_GetWidth(fibmp);
