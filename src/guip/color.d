@@ -1,6 +1,6 @@
 module guip.color;
 
-import std.algorithm, std.array, std.exception, std.string, std.ctype, std.conv : to;
+import std.algorithm, std.array, std.exception, std.string, std.ascii, std.conv : to;
 
 //version=VERBOSE;
 
@@ -118,7 +118,7 @@ Color color(ubyte a, ubyte r, ubyte g, ubyte b) {
 }
 
 Color color(string colorCode) {
-  colorCode = strip(colorCode).toupper();
+  colorCode = strip(colorCode).toUpper();
   if (colorCode.startsWith("0X"))
     colorCode = colorCode[2 .. $];
   else if (colorCode.startsWith("#"))
@@ -126,7 +126,7 @@ Color color(string colorCode) {
 
   enforce(colorCode.length);
 
-  if (std.ctype.isxdigit(colorCode[0])) {
+  if (std.ascii.isHexDigit(colorCode[0])) {
     uint argb;
     switch (colorCode.length) {
     case 8:
@@ -167,7 +167,7 @@ Color color(string colorCode) {
     }
     return color(0xFF, r, g, b);
   } else {
-    assert(isalpha(colorCode[0]));
+    assert(isAlpha(colorCode[0]));
 //    need to make the named color enum scoped
 //    auto capCol = capitalize(colorCode);
 //    foreach(c; __traits(allMembers, Color))
@@ -213,7 +213,7 @@ unittest {
 enum hexLetters = "0123456789ABCDEF";
 
 public uint fromHexDigit(dchar c) {
-  assert(isxdigit(c));
+  assert(isHexDigit(c));
   return c <= '9' ? (c & 0xF) : 9 + (c & 0xF);
 }
 
