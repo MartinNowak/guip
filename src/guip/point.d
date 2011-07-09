@@ -169,12 +169,13 @@ struct Point (T)
     this = -this;
   }
 
-  /** Round to integer point
-   */
-  IPoint round()() const
-    if (isFloatingPoint!T)
-  {
-    return IPoint(to!int(nearbyint(this.x)), to!int(nearbyint(this.y)));
+  static if (isFloatingPoint!T) {
+    /** Round to integer point
+     */
+    IPoint round() const
+    {
+      return IPoint(to!int(nearbyint(this.x)), to!int(nearbyint(this.y)));
+    }
   }
 
   Point opUnary(string op)() if (op == "-") {
