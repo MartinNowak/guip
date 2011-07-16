@@ -242,13 +242,24 @@ struct Point (T)
 
   /** Returns true if the point's coordinates equal (x,y)
    */
-  bool equals(T x, T y) const
-  { return this.x == x && this.y == y; }
-
-  bool opEquals(ref const Point rhs) const {
-    return this.x == rhs.x && this.y == rhs.y;
+  bool equals(T x, T y) const {
+    return this.x == x && this.y == y;
   }
 
+  bool opEquals(ref const Point rhs) const {
+    return this.equals(rhs.x, rhs.y);
+  }
+
+  static if (isFloatingPoint!T) {
+    bool approxEqual(T x, T y) const {
+      return .approxEqual(this.x, x)
+        && .approxEqual(this.y, y);
+    }
+
+    bool approxEqual(ref const Point rhs) const {
+      return this.approxEqual(rhs.x, rhs.y);
+    }
+  }
 };
 
 /** Returns the euclidian distance between a and b
