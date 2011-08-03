@@ -6,7 +6,8 @@ import guip.point, guip.rect;
 /**
    TypeTuple that contains all available events
  */
-alias TypeTuple!(StateEvent, ButtonEvent, MouseEvent, KeyEvent, RedrawEvent, ResizeEvent) EventTypes;
+alias TypeTuple!(StateEvent, ButtonEvent, MouseEvent, KeyEvent,
+                 RedrawEvent, ResizeEvent, DragEvent, DropEvent) EventTypes;
 
 /**
    Algebraic type that may contains any available event
@@ -104,6 +105,22 @@ struct RedrawEvent {
  */
 struct ResizeEvent {
   IRect area;
+}
+
+/**
+  files drag event
+*/
+struct DragEvent {
+  IPoint pos;
+  string[] files;
+}
+
+/**
+  files drop event
+*/
+struct DropEvent {
+  IPoint pos;
+  string[] files;
 }
 
 /**
