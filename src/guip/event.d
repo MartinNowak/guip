@@ -51,7 +51,8 @@ struct ButtonEvent {
   mixin(bitfields!(
             bool, "isdown", 1,
             bool, "isdouble", 1,
-            uint, "", 6));
+            bool, "isping", 1, // used for debug tools
+            uint, "", 5));
 }
 
 /**
