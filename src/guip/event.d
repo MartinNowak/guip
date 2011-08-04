@@ -137,7 +137,7 @@ struct DropEvent {
  */
 struct Button {
   @property bool any() const {
-    return this.left || this.middle || this.right;
+    return this.left || this.middle || this.right || this.wheelup || this.wheeldown;
   }
 
   mixin(bitfields!(
@@ -153,6 +153,10 @@ struct Button {
    a bitfield representing pressed modifiers
  */
 struct Mod {
+  @property bool any() const {
+    return this.shift || this.ctrl || this.alt;
+  }
+
   mixin(bitfields!(
           bool, "shift", 1,
           bool, "ctrl", 1,
