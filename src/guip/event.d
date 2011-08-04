@@ -34,15 +34,24 @@ auto visitEvent(Visitor, Args...)(Event e, Visitor visitor, Args args) {
  */
 struct ButtonEvent {
   @property bool isPress() const {
-    return this.isdown;
+    return this.isdown && !this.isdouble;
   }
   @property bool isRelease() const {
-    return !this.isdown;
+    return !this.isdown && !this.isdouble;
+  }
+  @property bool isDoublePress() const {
+    return this.isdown && this.isdouble;
+  }
+  @property bool isDoubleRelease() const {
+    return !this.isdown && this.isdouble;
   }
   IPoint pos;
-  bool isdown;
   Button button;
   Mod mod;
+  mixin(bitfields!(
+            bool, "isdown", 1,
+            bool, "isdouble", 1,
+            uint, "", 6));
 }
 
 /**
@@ -65,9 +74,9 @@ struct KeyEvent {
     return !this.isdown;
   }
   IPoint pos;
-  bool isdown;
   Key key;
   Mod mod;
+  bool isdown;
 }
 
 /**
