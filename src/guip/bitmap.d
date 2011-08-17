@@ -1,18 +1,15 @@
 module guip.bitmap;
 
-private {
-  import std.conv : to;
-  import std.range : outputRangeObject;
+import std.conv, std.exception, std.string, std.range : outputRangeObject;
 
-  import guip.color;
-  import guip.rect;
-  import guip.size;
+import guip.color;
+import guip.rect;
+import guip.size;
 
-  import freeimage.freeimage;
-  import core.atomic;
-  import std.exception, std.string;
-}
+import freeimage.freeimage;
+import core.atomic;
 
+pragma(importpath, "freeimage=https://github.com/dawgfoto/bindings/raw/master/freeimage/");
 
 //debug=PRINTF;
 debug(PRINTF) import std.stdio : writeln, printf;
