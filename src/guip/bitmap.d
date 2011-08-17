@@ -90,6 +90,10 @@ struct Bitmap {
     return cast(T[])this._buffer;
   }
 
+  const(T)[] getConstBuffer(T=Color)() const {
+    return cast(const(T)[])this._buffer;
+  }
+
   auto getLine(uint y) {
     return this.getRange(0u, this.width, y);
   }
