@@ -9,7 +9,7 @@ import guip.size;
 import freeimage.freeimage;
 import core.atomic;
 
-pragma(importpath, "freeimage=https://github.com/dawgfoto/bindings/raw/master/freeimage/");
+pragma(importpath, "freeimage=https://raw.github.com/dawgfoto/bindings/master/freeimage/");
 
 //debug=PRINTF;
 debug(PRINTF) import std.stdio : writeln, printf;
