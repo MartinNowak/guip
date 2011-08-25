@@ -333,7 +333,7 @@ struct Rect(T)
     if (this.left > this.right)
         swap(this.left, this.right);
     if (this.top > this.bottom)
-        swap(this.left, this.right);
+        swap(this.top, this.bottom);
   }
 
 
