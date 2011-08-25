@@ -61,17 +61,17 @@ struct Rect(T)
   /** Returns the rectangle's width. This does not check for a valid rectangle (i.e. left <= right)
       so the result may be negative.
   */
-  @property T width() const { return right - left; }
+  @property T width() const { return cast(T)(right - left); }
   @property void width(T width) {
-    this.right = this.left + width;
+    this.right = cast(T)(this.left + width);
   }
 
   /** Returns the rectangle's height. This does not check for a valid rectangle (i.e. top <= bottom)
       so the result may be negative.
   */
-  @property T height() const { return bottom - top; }
+  @property T height() const { return cast(T)(bottom - top); }
   @property void height(T height) {
-    this.bottom = this.top + height;
+    this.bottom = cast(T)(this.top + height);
   }
 
   @property Point!T center() const {
@@ -189,7 +189,8 @@ struct Rect(T)
       making the rectangle wider. The same hods true for dy and the top and bottom.
   */
   Rect inset(T dx, T dy) {
-    return Rect(this.left + dx, this.top + dy, this.right - dx, this.bottom - dy);
+    return Rect(cast(T)(this.left + dx), cast(T)(this.top + dy),
+                cast(T)(this.right - dx), cast(T)(this.bottom - dy));
   }
 
   /** Returns true if (x,y) is inside the rectangle and the rectangle is not

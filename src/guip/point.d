@@ -189,8 +189,8 @@ struct Point (T)
    */
   const Point opBinary(string op)(in Point rhs) const
   {
-    T resx = mixin("this.x" ~ op ~ "rhs.x");
-    T resy = mixin("this.y" ~ op ~ "rhs.y");
+    T resx = cast(T)(mixin("this.x" ~ op ~ "rhs.x"));
+    T resy = cast(T)(mixin("this.y" ~ op ~ "rhs.y"));
     return Point!T(resx, resy);
   }
 
@@ -213,8 +213,8 @@ struct Point (T)
   const Point opBinary(string op)(in Size!T size) const
     if (op == "-" || op == "+")
   {
-    T resx = mixin("this.x" ~ op ~ "size.width");
-    T resy = mixin("this.y" ~ op ~ "size.height");
+    T resx = cast(T)(mixin("this.x" ~ op ~ "size.width"));
+    T resy = cast(T)(mixin("this.y" ~ op ~ "size.height"));
     return Point(resx, resy);
   }
 
