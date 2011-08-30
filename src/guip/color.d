@@ -8,6 +8,21 @@ struct Color
 {
   uint argb;
 
+  immutable Color Black     = Color(0xff000000);
+  immutable Color DarkGray  = Color(0xff444444);
+  immutable Color Gray      = Color(0xff888888);
+  immutable Color LightGray = Color(0xffcccccc);
+  immutable Color WarmGray  = Color(0xffaab2b7);
+  immutable Color ColdGray  = Color(0xff67748c);
+  immutable Color White     = Color(0xffffffff);
+  immutable Color Red       = Color(0xffff0000);
+  immutable Color Green     = Color(0xff00ff00);
+  immutable Color Blue      = Color(0xff0000ff);
+  immutable Color Yellow    = Color(0xffffff00);
+  immutable Color Cyan      = Color(0xff00ffff);
+  immutable Color Magenta   = Color(0xffff00ff);
+  immutable Color Orange    = Color(0xffffa500);
+
   @property string toString() const {
     version (VERBOSE) {
       return "Color a: " ~ to!string(this.a) ~
@@ -67,25 +82,6 @@ private:
   }
 }
 
-enum : Color
-{
-  //! @@ BUG @@ does not evaluate at compile time
-  Black     = color(0xff000000),
-  DarkGray  = color(0xff444444),
-  Gray      = color(0xff888888),
-  LightGray = color(0xffcccccc),
-  WarmGray  = color(0xffaab2b7),
-  ColdGray  = color(0xff67748c),
-  White     = color(0xffffffff),
-  Red       = color(0xffff0000),
-  Green     = color(0xff00ff00),
-  Blue      = color(0xff0000ff),
-  Yellow    = color(0xffffff00),
-  Cyan      = color(0xff00ffff),
-  Magenta   = color(0xffff00ff),
-  Orange    = color(0xffffa500),
-}
-
 unittest
 {
   Color c;
@@ -95,11 +91,11 @@ unittest
   c.b = 40;
   auto ShiftVal = (10 << 24) | (20 << 16) | (30 << 8) | (40 << 0);
   assert(c.argb == ShiftVal);
-  assert(Black.a == 255 && Black.r == 0 && Black.g == 0 && Black.b == 0);
-  assert(Red.r == 255);
-  assert(Green.g == 255);
-  assert(Blue.b == 255);
-  assert(Magenta.g == 0);
+  assert(Color.Black.a == 255 && Color.Black.r == 0 && Color.Black.g == 0 && Color.Black.b == 0);
+  assert(Color.Red.r == 255);
+  assert(Color.Green.g == 255);
+  assert(Color.Blue.b == 255);
+  assert(Color.Magenta.g == 0);
 }
 
 Color color(uint argb) {
