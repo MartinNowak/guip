@@ -4,6 +4,7 @@ private {
   import std.algorithm;
   import std.conv : to;
   import std.math : nearbyint, ceil, floor;
+  import std.string;
   import std.traits : isIntegral, isFloatingPoint, Unsigned;
 
   import guip.point;
@@ -50,12 +51,12 @@ struct Rect(T)
     this.set(left, top, right, bottom);
   }
 
-  @property string toString() const {
-    return "Rect!"~to!string(typeid(T))
-      ~" left: "~to!string(this.left)
-      ~" top: "~to!string(this.top)
-      ~" right: "~to!string(this.right)
-      ~" bottom: "~to!string(this.bottom);
+  string toString() {
+    return (cast(const)this).toString();
+  }
+
+  string toString() const {
+    return std.string.format("R(%s, %s)", pos, size);
   }
 
   /** Returns the rectangle's width. This does not check for a valid rectangle (i.e. left <= right)

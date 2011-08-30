@@ -4,6 +4,7 @@ private {
   import std.math;
   import std.conv : to;
   import std.math : nearbyint;
+  import std.string;
   import std.traits : isSigned, isAssignable, isFloatingPoint;
 
   import guip.size;
@@ -49,8 +50,12 @@ struct Point (T)
     }
   }
 
-  @property string toString() const {
-    return "Point x:" ~ to!string(this.x) ~ " y:" ~ to!string(this.y);
+  string toString() {
+    return (cast(const)this).toString();
+  }
+
+  string toString() const {
+    return std.string.format("P(%s, %s)", x, y);
   }
 
   /** Set the point's X and Y coordinates */
