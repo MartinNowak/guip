@@ -10,7 +10,7 @@ struct Size(T)
   T width, height;
 
   string toString() const {
-    return (cast(const)this).toString();
+    return std.string.format("S(%s, %s)", width, height);
   }
 
   string toString() {
