@@ -143,7 +143,7 @@ struct Point (T)
    *  the point.
    */
   void rotateCW() {
-    this.set(-this.y, this.x);
+    this = Point(-this.y, this.x);
   }
 
   /** Rotate the point counter-clockwise by 90 degrees, writing the answer
@@ -158,7 +158,7 @@ struct Point (T)
    *  back into the point.
    */
   void rotateCCW() {
-    this.set(this.y, -this.x);
+    this = Point(this.y, -this.x);
   }
 
   /** Negate the point's coordinates
