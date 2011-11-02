@@ -238,19 +238,25 @@ uint BytesPerPixel(Bitmap.Config c) {
   }
 }
 
-// dummy class serves as lock
-class FreeImage {};
-shared FreeImage _freeImage;
-@property shared(FreeImage) freeImage() {
-  // TODO: cas doesn't compile => init unsafe
-//  if (_freeImage is null) {
-//    auto fi = new shared(FreeImage)();
-//    //    cas(&_freeImage, cast(FreeImage)null, fi);
-//    _freeImage = fi;
-//  }
-  return _freeImage;
-}
+// TODO: move freeimage functions into class so they are protected by a lock
+synchronized class FreeImage
+{
+    void init()
+    {
+    }
+};
 
-shared static this() {
-  _freeImage = new shared(FreeImage)();
+shared FreeImage _freeImage;
+@property shared(FreeImage) freeImage()
+{
+    if (_freeImage is null)
+    {
+        auto inst = new shared(FreeImage)();
+        synchronized(inst)
+        {
+            if (cas(&_freeImage, cast(shared FreeImage)null, inst))
+                inst.init();
+        }
+    }
+    return _freeImage;
 }
