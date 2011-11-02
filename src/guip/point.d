@@ -1,14 +1,7 @@
 module guip.point;
 
-private {
-  import std.math;
-  import std.conv : to;
-  import std.math : nearbyint;
-  import std.string;
-  import std.traits : isSigned, isAssignable, isFloatingPoint;
-
-  import guip.size;
-}
+import std.conv, std.math, std.string, std.traits;
+import guip.size;
 
 alias Point!(int) IPoint;
 alias Point!(float) FPoint;
