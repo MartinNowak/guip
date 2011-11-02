@@ -1,35 +1,60 @@
 module guip.size;
 
+import std.conv, std.string;
+
 alias Size!(int) ISize;
 alias Size!(float) FSize;
 
-import std.string;
-
 struct Size(T)
 {
-  T width, height;
+private:
+    T _width, _height;
 
-  string toString() const {
-    return std.string.format("S(%s, %s)", width, height);
-  }
+public:
 
-  string toString() {
-    return std.string.format("S(%s, %s)", width, height);
-  }
+    @property T width() const
+    {
+        return _width;
+    }
 
-  @property bool empty() const {
-    return this.width <= 0 || this.height <= 0;
-  }
+    @property void width(T width)
+    {
+        _width = width;
+    }
 
-  /**
-   * Returns a new size whose width/height is multiplied/divided by
-   * the scalar.
-   */
-  const Size!T opBinary(string op)(in T val) const
-    if (op == "*" || op == "/")
-  {
-    T width = mixin("this.width" ~ op ~ "val");
-    T height = mixin("this.height" ~ op ~ "val");
-    return Size!T(width, height);
-  }
+    @property T height() const
+    {
+        return _height;
+    }
+
+    @property void height(T height)
+    {
+        _height = height;
+    }
+
+    string toString() const
+    {
+        return std.string.format("S(%s, %s)", width, height);
+    }
+
+    string toString()
+    {
+        return std.string.format("S(%s, %s)", width, height);
+    }
+
+    @property bool empty() const
+    {
+        return _width <= 0 || _height <= 0;
+    }
+
+    /* Returns a new size whose width/height is multiplied/divided by
+     * the scalar.
+     */
+    const Size opBinary(string op)(in T val) const if (op == "*" || op == "/")
+    {
+        debug
+            return Size(to!T(_width * val), to!T(_height * val));
+        else
+            return Size(cast(T)(_width * val), cast(T)(_height * val));
+    }
 }
