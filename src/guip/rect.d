@@ -137,10 +137,10 @@ struct Rect(T)
 
   Point!T[4] toQuad() const {
     Point!T[4] res;
-    res[0].set(this.left, this.top);
-    res[1].set(this.right, this.top);
-    res[2].set(this.right, this.bottom);
-    res[3].set(this.left, this.bottom);
+    res[0] = Point!T(this.left, this.top);
+    res[1] = Point!T(this.right, this.top);
+    res[2] = Point!T(this.right, this.bottom);
+    res[3] = Point!T(this.left, this.bottom);
     return res;
   }
 
