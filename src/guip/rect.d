@@ -1,15 +1,7 @@
 module guip.rect;
 
-private {
-  import std.algorithm;
-  import std.conv : to;
-  import std.math : nearbyint, ceil, floor;
-  import std.string;
-  import std.traits : isIntegral, isFloatingPoint, Unsigned;
-
-  import guip.point;
-  import guip.size;
-}
+import std.algorithm, std.conv, std.math, std.string, std.traits;
+import guip.point, guip.size;
 
 alias Rect!(int) IRect;
 alias Rect!(float) FRect;
