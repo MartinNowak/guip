@@ -71,7 +71,7 @@ struct Point (T)
 
   /** Return the euclidian distance from (0,0) to the point
    */
-  @property real length()
+  @property real length() const
   {
     return std.math.sqrt(x * x + y * y);
   }
