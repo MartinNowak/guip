@@ -28,21 +28,6 @@ struct Point (T)
 {
   T x, y;
 
-  this (T x, T y) {
-    static if (isFloatingPoint!T) {
-      //assert(isNormal(x)&& isNormal(y));
-    }
-    this.x = x;
-    this.y = y;
-  }
-
-  static if (isFloatingPoint!T) {
-    this(creal cmplx) {
-      this.x = cmplx.re;
-      this.y = cmplx.im;
-    }
-  }
-
   string toString() {
     return (cast(const)this).toString();
   }
@@ -214,12 +199,6 @@ struct Point (T)
     T resx = cast(T)(mixin("this.x" ~ op ~ "size.width"));
     T resy = cast(T)(mixin("this.y" ~ op ~ "size.height"));
     return Point(resx, resy);
-  }
-
-  ref Point opAssign(T2)(in Point!T2 rhs) {
-    this.x = rhs.x;
-    this.y = rhs.y;
-    return this;
   }
 
   /** Add/Subtract v's coordinates to the point's
