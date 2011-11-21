@@ -32,12 +32,6 @@ struct Point (T)
 {
     T _x=0, _y=0;
 
-    this (T x, T y)
-    {
-        _x = x;
-        _y = y;
-    }
-
     string toString()
     {
         return (cast(const)this).toString();
@@ -273,13 +267,6 @@ struct Point (T)
             return Point(to!T(mixin(`_x `~op~`size.width`)), to!T(mixin(`_y `~op~`size.height`)));
         else
             return Point(cast(T)mixin(`_x `~op~`size.width`), cast(T)mixin(`_y `~op~`size.height`));
-    }
-
-    ref Point opAssign(T2)(in Point!T2 rhs)
-    {
-        _x = rhs._x;
-        _y = rhs._y;
-        return this;
     }
 
     ref Point opOpAssign(string op)(in Point rhs)
