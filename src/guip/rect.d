@@ -181,7 +181,7 @@ struct Rect(T)
       making the rectangle narrower. If dx is negative, then the sides are moved outwards,
       making the rectangle wider. The same hods true for dy and the top and bottom.
   */
-  Rect inset(T dx, T dy) {
+  Rect inset(T dx, T dy) const {
     return Rect(cast(T)(this.left + dx), cast(T)(this.top + dy),
                 cast(T)(this.right - dx), cast(T)(this.bottom - dy));
   }
