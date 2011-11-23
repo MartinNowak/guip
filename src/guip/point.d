@@ -309,8 +309,8 @@ struct Point (T)
     {
         invariant()
         {
-            assert(isFinite(_x) && isNormal(_x) &&
-                   isFinite(_y) && isNormal(_y));
+            assert(isFinite(_x) && !isSubnormal(_x) &&
+                   isFinite(_y) && !isSubnormal(_y));
         }
     }
 };
