@@ -31,12 +31,15 @@ public:
         setConfig(config, width, height);
     }
 
-    void setConfig(Bitmap.Config config, uint width, uint height)
+    void setConfig(Bitmap.Config config, uint width, uint height, ubyte[] buf=null)
     {
         _width  = width;
         _height = height;
         _config = config;
-        _buffer.length = width * height * BytesPerPixel(config);
+        if (buf !is null)
+            buffer = buf;
+        else
+            _buffer.length = width * height * BytesPerPixel(config);
     }
 
     @property uint width() const
@@ -64,34 +67,43 @@ public:
         return _config;
     }
 
-    const(T)[] getRangeConst(T=Color)(uint xStart, uint xEnd, uint y) const
+    @property inout(ubyte)[] buffer() inout
     {
-        return (cast(Bitmap*)&this).getRange!(T)(xStart, xEnd, y);
+        return _buffer[];
     }
 
-    T[] getRange(T=Color)(uint xStart, uint xEnd, uint y)
+    @property void buffer(ubyte[] buffer)
+    in
     {
-        assert(xEnd - xStart <= _width,
-               "start:" ~ to!string(xStart) ~ "end: "~ to!string(xEnd) ~ "width:"~to!string(_width));
-        assert(y <= _height, to!string(y));
-        size_t yOff = y * _width;
-        return getBuffer!T()[yOff + xStart .. yOff + xEnd];
-  }
-
-    T[] getBuffer(T=Color)()
+        assert(buffer.length >= width * height * BytesPerPixel(config));
+    }
+    body
     {
-        return cast(T[])_buffer;
+        _buffer = buffer;
     }
 
-    const(T)[] getConstBuffer(T=Color)() const
+    inout(T)[] getBuffer(T=Color)() inout
     {
-        return cast(const(T)[])_buffer;
+        return cast(inout(T)[])_buffer;
     }
 
-    auto getLine(uint y)
+    inout(T)[] getLine(T=Color)(uint y) inout
     {
-        return getRange(0u, _width, y);
+        immutable off = y * _width;
+        return getBuffer!T()[off .. off + _width];
     }
+
+    inout(T)[] getRange(T=Color)(uint xstart, uint xend, uint y) inout
+    in
+    {
+        assert(xend <= _width);
+    }
+    body
+    {
+        immutable off = y * _width;
+        return getBuffer!T()[off + xstart .. off + xend];
+    }
+
 
     @property void opaque(bool isOpaque)
     {
