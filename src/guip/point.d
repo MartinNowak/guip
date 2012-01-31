@@ -89,9 +89,9 @@ struct Point (T)
 
     /* Return the euclidian distance from (0,0) to the point
      */
-    @property typeof(.sqrt(T.init)) length() const
+    @property double length() const
     {
-        return sqrt(_x ^^2 + _y ^^ 2);
+        return sqrt(cast(double)(_x ^^2 + _y ^^ 2));
     }
 
     /* Set the point (vector) to be unit-length in the same direction
@@ -317,14 +317,14 @@ struct Point (T)
 
 /* Returns the euclidian distance between a and b
  */
-auto distance(T)(Point!T a, Point!T b) if (isFloatingPoint!T)
+double distance(T)(Point!T a, Point!T b) if (isFloatingPoint!T)
 {
-    return sqrt((a._x - b._x) ^^ 2 + (a._y - b._y) ^^ 2);
+    return sqrt(cast(double)((a._x - b._x) ^^ 2 + (a._y - b._y) ^^ 2));
 }
 
-auto distance(T)(Point!T a, Point!T b) if (isIntegral!T)
+double distance(T)(Point!T a, Point!T b) if (isIntegral!T)
 {
-    return sqrt((a._x - b._x) ^^ 2 + (a._y - b._y) ^^ 2);
+    return sqrt(cast(double)((a._x - b._x) ^^ 2 + (a._y - b._y) ^^ 2));
 }
 
 /* Returns the dot product of a and b, treating them as 2D column vectors
