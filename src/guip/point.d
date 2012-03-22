@@ -42,43 +42,8 @@ struct Point (T)
         return std.string.format("P(%s, %s)", x, y);
     }
 
-    version (PropertyXY) // won't reliably inline accessors
-    {
-        /*deprecated*/ @property ref T x()
-        {
-            return _x;
-        }
-
-        /*deprecated*/ @property ref T y()
-        {
-            return _y;
-        }
-
-        @property T x() const
-        {
-            return _x;
-        }
-
-        @property T y() const
-        {
-            return _y;
-        }
-
-        @property void x(T x)
-        {
-            _x = x;
-        }
-
-        @property void y(T y)
-        {
-            _y = y;
-        }
-    }
-    else
-    {
-        alias _x x;
-        alias _y y;
-    }
+    alias _x x;
+    alias _y y;
 
     /* Set the point's X and Y coordinates
      */
