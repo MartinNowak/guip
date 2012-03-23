@@ -117,7 +117,9 @@ Color color(string colorCode)
 {
     auto cclow = strip(colorCode).toLower();
     bool ishex;
-    if (cclow.startsWith("0x"))
+    if (cclow == "none")
+        return Color(0);
+    else if (cclow.startsWith("0x"))
     {
         ishex = true;
         cclow = cclow[2 .. $];
@@ -208,6 +210,7 @@ Color color(string colorCode)
 
 unittest
 {
+    assert(color("none") == Color(0));
     assert(color("0x000") == Color.Black);
     assert(color("0x000000") == Color.Black);
     assert(color("#000") == Color.Black);
