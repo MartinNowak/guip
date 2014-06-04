@@ -8,20 +8,23 @@ struct Color
 {
     uint argb;
 
-    immutable Color Black     = Color(0xff000000);
-    immutable Color DarkGray  = Color(0xff444444);
-    immutable Color Gray      = Color(0xff888888);
-    immutable Color LightGray = Color(0xffcccccc);
-    immutable Color WarmGray  = Color(0xffaab2b7);
-    immutable Color ColdGray  = Color(0xff67748c);
-    immutable Color White     = Color(0xffffffff);
-    immutable Color Red       = Color(0xffff0000);
-    immutable Color Green     = Color(0xff00ff00);
-    immutable Color Blue      = Color(0xff0000ff);
-    immutable Color Yellow    = Color(0xffffff00);
-    immutable Color Cyan      = Color(0xff00ffff);
-    immutable Color Magenta   = Color(0xffff00ff);
-    immutable Color Orange    = Color(0xffffa500);
+    enum : Color
+    {
+        Black     = Color(0xff000000),
+        DarkGray  = Color(0xff444444),
+        Gray      = Color(0xff888888),
+        LightGray = Color(0xffcccccc),
+        WarmGray  = Color(0xffaab2b7),
+        ColdGray  = Color(0xff67748c),
+        White     = Color(0xffffffff),
+        Red       = Color(0xffff0000),
+        Green     = Color(0xff00ff00),
+        Blue      = Color(0xff0000ff),
+        Yellow    = Color(0xffffff00),
+        Cyan      = Color(0xff00ffff),
+        Magenta   = Color(0xffff00ff),
+        Orange    = Color(0xffffa500),
+    }
 
     @property string toString() const
     {
