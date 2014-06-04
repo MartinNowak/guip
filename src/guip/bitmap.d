@@ -3,7 +3,6 @@ module guip.bitmap;
 import core.atomic;
 import std.conv, std.exception, std.string, std.range;
 import guip.color, guip.rect, guip.size;
-import freeimage.freeimage;
 
 /*
  * Bitmap
@@ -130,89 +129,12 @@ public:
 
     void save(string path) const
     {
-        auto bpp = 8 * BytesPerPixel(_config);
-        if (bpp != 0)
-        {
-            synchronized(freeImage)
-            {
-                FIBITMAP* fibmp;
-                // TODO: check if color masks needed
-                if (_config == Bitmap.Config.ARGB_8888)
-                {
-                    fibmp = FreeImage_Allocate(_width, _height, bpp,
-                                               ColorMask!("r"), ColorMask!("g"), ColorMask!("b"));
-                }
-                else
-                {
-                    fibmp = FreeImage_Allocate(_width, _height, bpp);
-                }
-                enforce(fibmp, "error while allocating write image");
-                ubyte* deviceBits = FreeImage_GetBits(fibmp);
-                deviceBits[0 .. _buffer.length] = _buffer[];
-                // TODO: possible to avoid flipping
-                FreeImage_FlipVertical(fibmp);
-                FreeImage_Save(FREE_IMAGE_FORMAT.PNG, fibmp, toStringz(path));
-
-                FreeImage_Unload(fibmp);
-            }
-        }
+        assert(0, "unimplemented");
     }
 
     static Bitmap load(string path)
     {
-        Bitmap result;
-        synchronized(freeImage)
-        {
-            immutable cpath = toStringz(path);
-            FREE_IMAGE_FORMAT fmt = FreeImage_GetFileType(cpath);
-
-            if (fmt == FREE_IMAGE_FORMAT.UNKNOWN)
-                fmt = FreeImage_GetFIFFromFilename(cpath);
-
-            enforce(fmt != FREE_IMAGE_FORMAT.UNKNOWN && FreeImage_FIFSupportsReading(fmt),
-                    format("Unsupported image format %s.", path));
-
-            FIBITMAP* fibmp = enforce(FreeImage_Load(fmt, cpath),
-                                      format("Error while decoding %s.", path));
-            // TODO: possible to avoid flipping
-            FreeImage_FlipVertical(fibmp);
-
-            Config config;
-            auto bpp = FreeImage_GetBPP(fibmp);
-            switch (bpp)
-            {
-            case 8:
-                // TODO: check for palettized color images
-                config = Config.A8;
-                break;
-
-            case 48: // for now
-            case 64: // for now
-            case 24:
-                auto cpy = FreeImage_ConvertTo32Bits(fibmp);
-                FreeImage_Unload(fibmp);
-                fibmp = cpy;
-                bpp = 32;
-                goto case;
-
-            case 32:
-                config = Config.ARGB_8888;
-                break;
-
-            default:
-                assert(0, format("Unsupported bit depth %s for image %s.", bpp, path));
-            }
-
-            immutable w = FreeImage_GetWidth(fibmp);
-            immutable h = FreeImage_GetHeight(fibmp);
-            result.setConfig(config, w, h);
-            immutable nbytes =  (w * h * bpp) >> 3;
-            ubyte* bits = FreeImage_GetBits(fibmp);
-            result._buffer[] = bits[0 .. nbytes];
-
-            FreeImage_Unload(fibmp);
-        }
-        return result;
+        assert(0, "unimplemented");
     }
 
 private:
@@ -222,7 +144,6 @@ private:
         opaque = 1 << 0,
     }
 }
-
 
 uint BytesPerPixel(Bitmap.Config c)
 {
@@ -235,27 +156,4 @@ uint BytesPerPixel(Bitmap.Config c)
     case Bitmap.Config.ARGB_8888:
         return 4;
     }
-}
-
-// TODO: move freeimage functions into class so they are protected by a lock
-synchronized class FreeImage
-{
-    void init()
-    {
-    }
-};
-
-shared FreeImage _freeImage;
-@property shared(FreeImage) freeImage()
-{
-    if (_freeImage is null)
-    {
-        auto inst = new shared(FreeImage)();
-        synchronized(inst)
-        {
-            if (cas(&_freeImage, cast(shared FreeImage)null, inst))
-                inst.init();
-        }
-    }
-    return _freeImage;
 }
