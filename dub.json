@@ -1,0 +1,9 @@
+{
+    "name": "guip",
+    "description": "GUI primitives",
+    "copyright": "Copyright © 2011-, Martin Nowak",
+    "license": "MIT",
+    "authors": ["Martin Nowak"],
+    "dependencies": {
+    }
+}
