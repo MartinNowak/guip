@@ -19,9 +19,13 @@ struct Rect(T)
     return Rect(0, 0);
   }
 
-  static Rect invalidRect() {
-    return Rect(T.max, T.max, T.min, T.min);
-  }
+   static Rect invalidRect() {
+     static if (isIntegral!T) {
+       return Rect(T.max, T.max, T.min, T.min);
+     } else {
+       return Rect(-T.infinity, -T.infinity, T.infinity, T.infinity);
+     }
+   }
 
   this(T w, T h) {
     this.set(0, 0, w, h);
@@ -191,34 +195,34 @@ struct Rect(T)
       and bottom are not. Thus for the rectangle (0, 0, 5, 10), the
       points (0,0) and (0,9) are inside, while (-1,0) and (5,9) are not.
   */
-  const bool contains(bool check=true)(T x, T y) const
+  const bool contains(bool check=true)(T x, T y)
     if (isIntegral!T)
   {
     return (cast(Unsigned!T)(x - left)) <= (right - left) &&
       (cast(Unsigned!T)(y - top)) <= (bottom - top);
   }
 
-  const bool contains(bool check=true)(T x, T y) const
+  const bool contains(bool check=true)(T x, T y)
     if (!isIntegral!T)
   {
     return this.left <= x && this.right >= x
       && this.top <= y && this.bottom >= y;
   }
 
-  const bool contains(bool check=true)(Point!T pt) const {
+  const bool contains(bool check=true)(Point!T pt) {
     return this.contains!(check)(pt.x, pt.y);
   }
 
   /** Returns true if the 4 specified sides of a rectangle are inside or equal to this rectangle.
       If either rectangle is empty, contains() returns false.
   */
-  const bool contains(bool check=true)(T left, T top, T right, T bottom) const {
+  const bool contains(bool check=true)(T left, T top, T right, T bottom) {
     return this.contains!check(Rect(left, top, right, bottom));
   }
 
   /** Returns true if the specified rectangle r is inside or equal to this rectangle.
    */
-  const bool contains(bool check=true)(in Rect b) const {
+  const bool contains(bool check=true)(in Rect b) {
     static if(check == true) {
       if (b.empty || this.empty)
 	return false;
@@ -271,7 +275,7 @@ struct Rect(T)
 
   /** Returns true if a and b are not empty, and they intersect
    */
-  const bool intersects(bool check=true)(in Rect b) const {
+  const bool intersects(bool check=true)(in Rect b) {
     static if(check == true) {
       if (b.empty || this.empty)
 	return false;
@@ -336,10 +340,18 @@ struct Rect(T)
     assert(pts.length > 0);
   }
   body {
-    T left = T.max;
-    T top = T.max;
-    T right = T.min;
-    T bottom = T.min;
+     T left, top, right, bottom;
+     static if (isIntegral!T) {
+       left = T.max;
+       top = T.max;
+       right = T.min;
+       bottom = T.min;
+     } else {
+       left = T.infinity;
+       top = T.infinity;
+       right = -T.infinity;
+       bottom = -T.infinity;
+     }
     foreach(pt; pts) {
       left = min(left, pt.x);
       right = max(right, pt.x);

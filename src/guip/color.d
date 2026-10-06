@@ -52,7 +52,7 @@ struct Color
         return color(a, cast(ubyte)(255 - r), cast(ubyte)(255 - g), cast(ubyte)(255 - b));
     }
 
-    const Color opBinary(string op)(Color rhs) const if (op == "+")
+    const Color opBinary(string op)(Color rhs) if (op == "+")
     {
         return color(this.argb + rhs.argb);
     }
@@ -235,13 +235,13 @@ unittest
     assert(color("AABBCCDD").argb == exp);
 }
 
-package:
-
 template ColorMask(string s)
 {
     static assert(s.length <=4 && s.length > 0);
     enum ColorMask = StringToMask!(s);
 }
+
+package:
 
 template StringToMask(string s)
 {

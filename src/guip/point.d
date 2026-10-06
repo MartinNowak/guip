@@ -155,14 +155,14 @@ struct Point (T)
 
         Point rotatedCW() const
         {
-            return Point(-_y, _x);
+            return Point(cast(T)(-_y), _x);
         }
 
         /* Returns a point rotated counter-clockwise by 90 degrees.
-         */
+          */
         Point rotatedCCW() const
         {
-            return Point(_y, -_x);
+            return Point(_y, cast(T)(-_x));
         }
 
         deprecated void rotateCCW(out Point dst) const
@@ -182,7 +182,7 @@ struct Point (T)
          */
         Point opUnary(string op)() const if (op == "-")
         {
-            return Point(-_x, -_y);
+            return Point(cast(T)(-_x), cast(T)(-_y));
         }
 
         deprecated void negate()
@@ -260,8 +260,8 @@ struct Point (T)
     {
         bool approxEqual(T x, T y) const
         {
-            return .approxEqual(_x, x)
-                && .approxEqual(_y, y);
+            return std.math.isClose(_x, x)
+                && std.math.isClose(_y, y);
         }
 
         bool approxEqual(in Point rhs) const
@@ -368,21 +368,21 @@ void testVectorLength(T)()
 
     p1 = Point!T(5, 5);
     p1 = p1.normalized;
-    assert(approxEqual(p1.x, to!T(std.math.sqrt(0.5))));
-    assert(approxEqual(p1.y, to!T(std.math.sqrt(0.5))));
+    assert(std.math.isClose(p1.x, to!T(std.math.sqrt(0.5))));
+    assert(std.math.isClose(p1.y, to!T(std.math.sqrt(0.5))));
 
     p1 = Point!T(1, 1);
     p1 = p1.scaledTo(4);
-    assert(approxEqual(p1.x, to!T(2 * SQRT2)));
-    assert(approxEqual(p1.y, to!T(2 * SQRT2)));
+    assert(std.math.isClose(p1.x, to!T(2 * SQRT2)));
+    assert(std.math.isClose(p1.y, to!T(2 * SQRT2)));
 
     p2 = p1.scaledBy(SQRT2);
-    assert(approxEqual(p2.x, to!T(p1.x * SQRT2)));
-    assert(approxEqual(p2.y, to!T(p1.y * SQRT2)));
+    assert(std.math.isClose(p2.x, to!T(p1.x * SQRT2)));
+    assert(std.math.isClose(p2.y, to!T(p1.y * SQRT2)));
 
     p1 = p2.scaledBy(0.5);
-    assert(approxEqual(p1.x, to!T(p2.x * 0.5)));
-    assert(approxEqual(p1.y, to!T(p2.y * 0.5)));
+    assert(std.math.isClose(p1.x, to!T(p2.x * 0.5)));
+    assert(std.math.isClose(p1.y, to!T(p2.y * 0.5)));
 
     p1 = Point!T(3, 3);
     p2 = Point!T(6, 7);

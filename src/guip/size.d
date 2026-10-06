@@ -50,7 +50,7 @@ public:
     /* Returns a new size whose width/height is multiplied/divided by
      * the scalar.
      */
-    const Size opBinary(string op)(in T val) const if (op == "*" || op == "/")
+    const Size opBinary(string op)(in T val) if (op == "*" || op == "/")
     {
         debug
             return Size(to!T(_width * val), to!T(_height * val));
